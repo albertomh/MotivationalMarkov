@@ -1,0 +1,10 @@
+env
+*.DS_Store
+*.pyc
+__pycache__
+.idea/
+.venv
+db.sqlite3
+develop.py
+secrets.py
+ubuntu-xenial-16.04-cloudimg-console.log
