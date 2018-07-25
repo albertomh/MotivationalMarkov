@@ -38,6 +38,17 @@ class Database:
         else:
             print("Error: cannot create the database connection.")
 
+    """
+    Create a table from a given SQL statement.
+    """
+    @staticmethod
+    def create_table(connection, create_table_sql):
+        try:
+            cursor = connection.cursor()
+            cursor.execute(create_table_sql)
+        except sqlite3.Error as error:
+            print(error)
+
     def main(self):
         self.build_schema()
 
