@@ -49,6 +49,28 @@ class Database:
         except sqlite3.Error as error:
             print(error)
 
+    """
+    Return a list of SQL statements used by build_schema to generate tables.
+    """
+    @staticmethod
+    def table_creation_sql_statements():
+        statements = [
+            """ CREATE TABLE IF NOT EXISTS months (
+                   id             integer PRIMARY KEY,
+                   year           text    NOT NULL,
+                   month          text    NOT NULL
+                 );""",
+            """ CREATE TABLE IF NOT EXISTS articles (
+                   id             integer PRIMARY KEY,
+                   title          text    NOT NULL,
+                   url            text    NOT NULL,
+                   paragraphs     text    NOT NULL,
+                   date_published integer NOT NULL
+                 );""",
+        ]
+
+        return statements
+
     def main(self):
         self.build_schema()
 
