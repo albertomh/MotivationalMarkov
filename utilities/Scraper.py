@@ -1,17 +1,23 @@
 # This software is provided under the MIT license.
 # Copyright (c) 2018 Alberto Morón Hernández
 # --------------------------------------------------------------------------- #
-""" Scrape articles and store them in the database. """
+""" Populate the database with scraped data.
+"""
+
+from utilities.Database import Database
 
 
-class Scraper(object):
-    def __init__(self, homepage):
+class Scraper:
+    def __init__(self, homepage, database):
         self.homepage = homepage
+        self.database = Database(database)
+
+        self.connection = self.database.connect()
 
     def main(self):
         return
 
 
 if __name__ == "__main__":
-    scraper = Scraper("http://davetrott.co.uk/")
+    scraper = Scraper("http://davetrott.co.uk/", '../data/database.db')
     scraper.main()
