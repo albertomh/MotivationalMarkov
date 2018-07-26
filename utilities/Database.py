@@ -89,6 +89,13 @@ class Database:
         except sqlite3.Error as error:
             print(error)
 
+    """
+    Return a list of the columns in a given table.
+    """
+    def table_columns(self, table):
+        sql_table_columns = self.execute(self.connect(), " SELECT * FROM {} ".format(table), ()).description
+        return list(map(lambda x: x[0], sql_table_columns))
+
     def main(self):
         self.build_schema()
 
