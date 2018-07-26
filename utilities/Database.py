@@ -41,11 +41,9 @@ class Database:
     """
     Create a table from a given SQL statement.
     """
-    @staticmethod
-    def create_table(connection, create_table_sql):
+    def create_table(self, connection, create_table_sql):
         try:
-            cursor = connection.cursor()
-            cursor.execute(create_table_sql)
+            self.execute(connection, create_table_sql, ())
         except sqlite3.Error as error:
             print(error)
 
@@ -70,6 +68,26 @@ class Database:
         ]
 
         return statements
+
+    """
+    Execute a single SQL statement.
+    """
+    @staticmethod
+    def execute(connection, sql_statement, data):
+        try:
+            return connection.cursor().execute(sql_statement, data)
+        except sqlite3.Error as error:
+            print(error)
+
+    """
+    Execute multiple SQL statements.
+    """
+    @staticmethod
+    def execute_many(connection, sql_statement, data):
+        try:
+            return connection.cursor().executemany(sql_statement, data)
+        except sqlite3.Error as error:
+            print(error)
 
     def main(self):
         self.build_schema()
