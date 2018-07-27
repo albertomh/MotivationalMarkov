@@ -2,9 +2,11 @@
 # Copyright (c) 2018 Alberto Morón Hernández
 # --------------------------------------------------------------------------- #
 """ Populate the database with scraped data.
+    Populates the following tables: 'months', 'articles'.
 """
 
 from utilities.Database import Database
+from utilities.Helpers import Helpers as Helper
 
 
 class Scraper:
@@ -14,8 +16,22 @@ class Scraper:
 
         self.connection = self.database.connect()
 
+    """
+    """
+    def update_months_table(self):
+        months = []
+
+        sql_get_last_month = " SELECT * FROM months ORDER BY year DESC, month DESC LIMIT 1 "
+        last_month = Database.execute(self.connection, sql_get_last_month, ()).fetchone()
+        # If there are no entries in the 'months' table, default to 1970/01/01.
+        if last_month is None:
+            last_month = (0, '1970', '01')
+        last_month_timestamp = Helper.to_timestamp('/'.join(last_month[1:]), '%Y/%m')
+
+        return months
+
     def main(self):
-        return
+        self.update_months_table()
 
 
 if __name__ == "__main__":
