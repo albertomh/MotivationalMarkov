@@ -20,6 +20,9 @@ class Scraper:
         self.connection = self.database.connect()
 
     """
+    Populate the 'months' table with 'year, month' records.
+    Return a list including the last month in the database before
+    the function was called and all new months that were inserted.
     """
     def update_months_table(self):
         months = []
@@ -45,6 +48,16 @@ class Scraper:
                 months.append((human_readable[0], human_readable[1]))
 
         months.reverse()  # List months in chronological order.
+
+        if months:
+            sql_insert_months = " INSERT INTO months(year, month) VALUES(?,?) "
+            Database.execute_many(self.connection, sql_insert_months, months)
+            self.connection.commit()
+            print("\nAdded {} rows:\n{}\nto the table 'months'.\n".format(len(months), months))
+
+        # Prepend what was previously the last entry in the 'months' table.
+        if last_month[0] is not 0:
+            months.insert(0, last_month[1:])
 
         return months
 
