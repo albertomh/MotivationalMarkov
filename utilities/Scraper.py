@@ -20,6 +20,18 @@ class Scraper:
         self.connection = self.database.connect()
 
     """
+    Return a list of months ['YYYY/MM', ...] for which articles have not yet been scraped.
+    """
+    def months_with_articles_to_scrape(self):
+        months = self.update_months_table()
+
+        if months is None:
+            print("The list of months to scrape is empty. scrape_all_months() returned None.")
+            return
+
+        return ['/'.join(month) for month in months]
+
+    """
     Populate the 'months' table with 'year, month' records.
     Return a list including the last month in the database before
     the function was called and all new months that were inserted.
