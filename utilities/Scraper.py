@@ -7,6 +7,8 @@
 
 import re
 import requests
+import time
+from random import randint
 from bs4 import BeautifulSoup
 from utilities.Database import Database
 from utilities.Helpers import Helpers as Helper
@@ -72,6 +74,30 @@ class Scraper:
             months.insert(0, last_month[1:])
 
         return months
+
+    """
+    Return a payload containing article metadata and a list of the article's paragraphs.
+    """
+    @staticmethod
+    def scrape_article(url):
+        time.sleep(randint(120, 260) / 100)  # Wait between requests.
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+        page = requests.get(url, headers=headers).text
+        markup = BeautifulSoup(page, "html.parser")
+
+        entry_date = markup.find('time', attrs={'class': 'entry-date'})['datetime']
+        timestamp = Helper.to_timestamp(entry_date, '%Y-%m-%dT%H:%M:%S+00:00')
+        title = markup.find('h1', attrs={'class': 'entry-title'}).find('a').text
+        entry_content = markup.find('div', attrs={'class': 'entry-content'}).findAll('p')
+
+        # Remove '&nbsp;', '\n'.
+        paragraphs = [re.sub(u'[\xa0|\n]', u'', tag.text) for tag in entry_content]
+        paragraphs = [paragraph for paragraph in paragraphs if paragraph is not '']
+
+        payload = (url, timestamp, title, paragraphs)
+
+        return payload
 
     def main(self):
         self.update_months_table()
