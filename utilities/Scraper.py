@@ -27,7 +27,7 @@ class Scraper:
     def months_with_articles_to_scrape(self):
         months = self.update_months_table()
 
-        if months is None:
+        if months is None or len(months) is 0:
             print("The list of months to scrape is empty. scrape_all_months() returned None.")
             return
 
@@ -74,6 +74,23 @@ class Scraper:
             months.insert(0, last_month[1:])
 
         return months
+
+    """
+    Return a list of tuples of all articles (and their metadata) for a given month.
+    """
+    def scrape_articles_in_month(self, month):
+        urls, articles = [], []
+        page = requests.get(self.homepage + month).text
+
+        # Construct list of links and reverse it in order to get the correct chronological order.
+        for link in BeautifulSoup(page, "html.parser").findAll('a', attrs={'class': 'archive'}):
+            urls.append(link.get('href'))
+        urls.reverse()
+
+        for url in urls:
+            articles.append(self.scrape_article(url))
+
+        return articles
 
     """
     Return a payload containing article metadata and a list of the article's paragraphs.
