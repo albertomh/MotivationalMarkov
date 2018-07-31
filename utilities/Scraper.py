@@ -9,6 +9,7 @@ import re
 import requests
 import time
 from random import randint
+from datetime import datetime
 from bs4 import BeautifulSoup
 from utilities.Database import Database
 from utilities.Helpers import Helpers as Helper
@@ -20,6 +21,39 @@ class Scraper:
         self.database = Database(database)
 
         self.connection = self.database.connect()
+
+    """
+    Scrape and create a database record for each article.
+    """
+    def scrape_all_articles(self):
+        all_months = self.months_with_articles_to_scrape()
+        article_columns = self.database.table_columns('articles')
+        sql_article_where_url = " SELECT * FROM articles WHERE url = ? "
+
+        for month in all_months:
+            for article in self.scrape_articles_in_month(month):
+                existing_article = Database.execute(self.connection, sql_article_where_url, (article[0],)).fetchone()
+
+                # Skip the article if it already exists in the database.
+                if existing_article:
+                    existing_article = dict(zip(article_columns, existing_article))  # {column: data, ...}
+
+                    date_published = datetime.fromtimestamp(int(existing_article['date_published'])).strftime(
+                        '%Y/%m/%d')
+                    print("|  An entry for {} ({}) already exists in the database.".format(
+                        existing_article['title'], date_published))
+                else:
+                    # url, date_published, title, paragraphs = article[0], article[1], article[2], str(article[3])
+                    article = dict(zip(article_columns, article))
+
+                    sql_insert_article = " INSERT INTO articles(title, url, paragraphs, date_published) VALUES(?,?,?,?) "
+                    Database.execute(self.connection,
+                                     sql_insert_article,
+                                     (article['title'], article['url'], article['paragraphs'], article['date_published']))
+                    self.connection.commit()
+
+                    date_published = datetime.fromtimestamp(article['date_published']).strftime('%Y/%m/%d')
+                    print("+  Added article {} ({}) to the     database.".format(article['title'], date_published))
 
     """
     Return a list of months ['YYYY/MM', ...] for which articles have not yet been scraped.
@@ -117,7 +151,7 @@ class Scraper:
         return payload
 
     def main(self):
-        self.update_months_table()
+        self.scrape_all_articles()
 
 
 if __name__ == "__main__":
