@@ -35,8 +35,6 @@ class Database:
         if connection is not None:
             for statement in self.table_creation_sql_statements():
                 self.create_table(connection, statement)
-        else:
-            print("Error: cannot create the database connection.")
 
     """
     Create a table from a given SQL statement.
@@ -93,7 +91,8 @@ class Database:
     Return a list of the columns in a given table.
     """
     def table_columns(self, table):
-        sql_table_columns = self.execute(self.connect(), " SELECT * FROM {} ".format(table), ()).description
+        sql_select_all = " SELECT * FROM {} ".format(table)
+        sql_table_columns = self.execute(self.connect(), sql_select_all, ()).description
         return list(map(lambda x: x[0], sql_table_columns))
 
     def main(self):
