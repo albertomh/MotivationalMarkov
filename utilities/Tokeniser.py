@@ -15,7 +15,22 @@ class Tokeniser:
         self.ngram_size = ngram_size
 
     """
-    Return a list of all the titles in the 'articles' table of the form [(article_id, 'title'), ...].
+    Return a dictionary of the form {article_id: ['_^', 'word1', ..., 'word_n','$_'], ...}
+    """
+    def tokenise_titles(self, article_titles=None):
+        if article_titles is None:
+            article_titles = self.all_article_titles()
+
+        tokenised_titles = dict((id_number, title.split(' ')) for (id_number, title) in article_titles)
+
+        for title in tokenised_titles.values():
+            title.insert(0, '_^')  # Utterance start marker.
+            title.append('$_')     # Utterance end marker.
+
+        return tokenised_titles
+
+    """
+    Return a list of all the titles in the 'articles' table of the form [(id, 'title'), ...].
     """
     def all_article_titles(self):
         sql_all_article_titles = " SELECT id, title FROM articles WHERE title IS NOT NULL "
