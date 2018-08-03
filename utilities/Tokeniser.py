@@ -15,6 +15,23 @@ class Tokeniser:
         self.ngram_size = ngram_size
 
     """
+    Return a list of ngrams of size 'self.ngram_size' for the given list of tokens.
+    """
+    @staticmethod
+    def ngram(tokens, ngram_size):
+        number_of_tokens = len(tokens)
+        ngrams = []
+
+        # Halt program execution for invalid values of n.
+        if ngram_size == 0 or ngram_size > (number_of_tokens - 2):  # Subtract 2 to account for the insertion of utterance start/end tokens.
+            raise ValueError("The value of ngram_size cannot be 0 or larger than the number of tokens in the shortest utterance.")
+
+        for token_number in range(number_of_tokens):
+            first_ngram = last_ngram = list()
+
+        return ngrams
+
+    """
     Return a dictionary of the form {article_id: ['_^', 'word1', ..., 'word_n','$_'], ...}
     """
     def tokenise_titles(self, article_titles=None):
