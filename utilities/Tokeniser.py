@@ -41,6 +41,13 @@ class Tokeniser:
                     last_ngram.append(tokens[token])
                 ngrams.append(tuple(last_ngram))
 
+            elif token_number < number_of_tokens - ngram_size:
+                # Handle all other ngrams in between.
+                new_ngram = list()
+                for token in range(token_number, token_number + ngram_size):
+                    new_ngram.append(tokens[token])
+                ngrams.append(tuple(new_ngram))
+
         return ngrams
 
     """
