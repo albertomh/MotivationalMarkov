@@ -15,6 +15,25 @@ class Tokeniser:
         self.ngram_size = ngram_size
 
     """
+    Return a dictionary of the form {article_id: [list of title ngrams]}
+    """
+    def title_ngrams(self, tokenised_titles=None):
+        if tokenised_titles is None:
+            tokenised_titles = self.tokenise_titles()
+
+        title_ngrams = dict()
+
+        # Discard those utterances shorter than the ngram_size and
+        # print the number of sentences used to generate ngrams.
+        for (id_number, title) in tokenised_titles.items():
+            if len(title) - 2 >= self.ngram_size:
+                title_ngrams[id_number] = self.ngram(title, self.ngram_size)
+
+        message = "\n{} titles out of a total of {} were converted into ngrams."
+        print(message.format(len(title_ngrams), len(tokenised_titles)))
+        return title_ngrams
+
+    """
     Return a list of ngrams of size 'self.ngram_size' for the given list of tokens.
     """
     @staticmethod
