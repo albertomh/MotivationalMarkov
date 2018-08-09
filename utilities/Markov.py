@@ -4,9 +4,23 @@
 """ Generate utterances using Markov chains.
 """
 
+from utilities.Database import Database
+from utilities.Tokeniser import Tokeniser
+
 
 class Markov:
-    def __init__(self):
+    def __init__(self, database, ngram_size):
+        self.database = Database(database)
+        self.connection = self.database.connect()
+
+        self.tokeniser = Tokeniser(database, ngram_size)
+        self.original_titles = self.tokeniser.all_article_titles()
+
+        self.memory = {}
+
+    """
+    """
+    def learn(self, ngrams):
         pass
 
     def main(self):
@@ -14,5 +28,5 @@ class Markov:
 
 
 if __name__ == "__main__":
-    markov = Markov()
+    markov = Markov('../data/database.db', ngram_size=2)
     markov.main()
