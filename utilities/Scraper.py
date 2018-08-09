@@ -17,10 +17,10 @@ from utilities.Helpers import Helpers as Helper
 
 class Scraper:
     def __init__(self, homepage, database):
-        self.homepage = homepage
         self.database = Database(database)
-
         self.connection = self.database.connect()
+
+        self.homepage = homepage
 
     """
     Scrape and create a database record for each article.
