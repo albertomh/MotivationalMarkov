@@ -19,12 +19,19 @@ class Markov:
         self.memory = {}
 
     """
+    Accepts a dictionary of {article_id: [list of title ngrams]} and modifies self.memory
+    to learn the most likely word to follow each word in the lexicon.
     """
     def learn(self, ngrams):
-        pass
+        for list_of_ngrams in ngrams.values():
+            for origin_word, target_word in list_of_ngrams:
+                if origin_word not in self.memory:
+                    self.memory[origin_word] = []
+                self.memory[origin_word].append(target_word)
 
     def main(self):
-        pass
+        title_ngrams = self.tokeniser.title_ngrams()
+        self.learn(title_ngrams)
 
 
 if __name__ == "__main__":
