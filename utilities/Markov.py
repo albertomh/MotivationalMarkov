@@ -17,7 +17,6 @@ class Markov:
         self.original_titles = self.tokeniser.all_article_titles()
 
         self.memory = {}
-
         self.learn(self.tokeniser.title_ngrams())
 
     """
@@ -30,6 +29,13 @@ class Markov:
                 if origin_word not in self.memory:
                     self.memory[origin_word] = []
                 self.memory[origin_word].append(target_word)
+
+    """
+    Return a tuple consisting of a randomly chosen next word given the current word, 
+    and the probability of the next word being chosen.
+    """
+    def next_word(self, current_word):
+        pass
 
     def main(self):
         pass
