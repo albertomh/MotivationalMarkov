@@ -4,6 +4,8 @@
 """ Generate utterances using Markov chains.
 """
 
+import random
+
 from utilities.Database import Database
 from utilities.Tokeniser import Tokeniser
 
@@ -39,6 +41,11 @@ class Markov:
 
         if not next_possible_words:
             next_possible_words = self.memory.keys()
+
+        next_word = random.sample(next_possible_words, 1)[0]
+        next_word_probability = next_possible_words.count(next_word) / len(next_possible_words)
+
+        return next_word, next_word_probability
 
     def main(self):
         pass
