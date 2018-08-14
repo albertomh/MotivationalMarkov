@@ -35,7 +35,10 @@ class Markov:
     and the probability of the next word being chosen.
     """
     def next_word(self, current_word):
-        pass
+        next_possible_words = self.memory.get(current_word)
+
+        if not next_possible_words:
+            next_possible_words = self.memory.keys()
 
     def main(self):
         pass
