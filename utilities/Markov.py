@@ -33,6 +33,18 @@ class Markov:
                 self.memory[origin_word].append(target_word)
 
     """
+    Generate a title, returning a dictionary of the form:
+        {probability: ('title', article_id, [individual token probabilities])}
+    where article_id is None or an integer if the generated title is overfitted and
+    already exists on the webpage as a title.
+    Can optionally pass a number to generate many titles. Defaults to one title.
+    """
+    def generate_title(self):
+        output = dict()
+
+        return output
+
+    """
     Return a tuple consisting of a randomly chosen next word given the current word, 
     and the probability of the next word being chosen.
     """
